@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Car, Shield, Clock, Users, CheckCircle, Wrench, Battery, Zap, Settings, Award, MapPin, Phone
+  Car, Shield, Clock, Users, CheckCircle, Wrench, Battery, Zap, Settings, Award, MapPin, Phone, Search, ChevronDown
 } from 'lucide-react';
 
 import brake from '../assets/brake.jpg';
@@ -16,6 +16,12 @@ import why3 from '../assets/why3.jpg';
 
 const Home = () => {
   const [currentImg, setCurrentImg] = useState(0);
+  const [activeTab, setActiveTab] = useState('services');
+  const [regNo, setRegNo] = useState('');
+  const [selectedService, setSelectedService] = useState('');
+  const [tyreSize, setTyreSize] = useState({ width: '205', profile: '55', rim: '16' });
+  const [tyreType, setTyreType] = useState('fully-fitted');
+  
   const images = [why, why2, why3];
 
   useEffect(() => {
@@ -40,6 +46,251 @@ const Home = () => {
     { icon: <Clock className="w-8 h-8" />, title: "Quick Service", description: "Fast turnaround times" },
     { icon: <CheckCircle className="w-8 h-8" />, title: "Quality Guaranteed", description: "All work comes with warranty" }
   ];
+
+  const handleSearch = () => {
+    if (activeTab === 'services') {
+      // Handle services search
+      console.log('Searching for services with reg:', regNo);
+    } else if (activeTab === 'tyre-fitting') {
+      // Handle tyre fitting search
+      console.log('Searching for tyres:', tyreSize, tyreType);
+    } else if (activeTab === 'book-mot') {
+      // Handle MOT booking
+      console.log('Booking MOT for reg:', regNo);
+    }
+  };
+
+  const BookingSystem = () => (
+  <div
+    className="mt-8 p-6 rounded-xl"
+    style={{
+      background: 'var(--bg-gradient-main)',
+      borderRadius: 'var(--radius-lg)',
+      boxShadow: 'var(--shadow-lg)'
+    }}
+  >
+    {/* Tab Navigation */}
+    <div className="flex flex-wrap gap-2 mb-6">
+      <button
+        onClick={() => setActiveTab('services')}
+        className={`px-4 py-2 font-medium transition-all duration-300 ${
+          activeTab === 'services'
+            ? 'bg-white text-black'
+            : 'border border-white text-white hover:bg-white hover:text-black'
+        }`}
+        style={{ borderRadius: 'var(--radius-md)' }}
+      >
+        Services
+      </button>
+      <button
+        onClick={() => setActiveTab('tyre-fitting')}
+        className={`px-4 py-2 font-medium transition-all duration-300 ${
+          activeTab === 'tyre-fitting'
+            ? 'bg-white text-black'
+            : 'border border-white text-white hover:bg-white hover:text-black'
+        }`}
+        style={{ borderRadius: 'var(--radius-md)' }}
+      >
+        Tyre Fitting
+      </button>
+      <button
+        onClick={() => setActiveTab('book-mot')}
+        className={`px-4 py-2 font-medium transition-all duration-300 ${
+          activeTab === 'book-mot'
+            ? 'bg-white text-black'
+            : 'border border-white text-white hover:bg-white hover:text-black'
+        }`}
+        style={{ borderRadius: 'var(--radius-md)' }}
+      >
+        <Shield className="w-4 h-4 inline mr-2" />
+        Book MOT
+      </button>
+    </div>
+
+    {/* Services Tab */}
+    {activeTab === 'services' && (
+      <div className="space-y-4">
+        <div>
+          <label className="block text-white font-medium mb-2">
+            Enter your Reg. No. (After select service)
+          </label>
+          <div className="flex">
+            <div className="flex items-center px-3 bg-[var(--primary-blue)] rounded-l-lg">
+              <div className="w-6 h-4 bg-[var(--primary-blue-dark)] rounded-sm flex items-center justify-center">
+                <span className="text-white text-xs font-bold">GB</span>
+              </div>
+            </div>
+            <input
+              type="text"
+              value={regNo}
+              onChange={(e) => setRegNo(e.target.value.toUpperCase())}
+              placeholder="ENTER REG NO."
+              className="flex-1 px-4 py-3 bg-[var(--primary-blue-lighter)] text-black font-bold placeholder-gray-700 rounded-r-lg focus:outline-none"
+            />
+          </div>
+        </div>
+        <button
+          onClick={handleSearch}
+          className="w-full bg-[var(--primary-blue)] text-white py-3 rounded-lg font-bold hover:bg-[var(--primary-blue-dark)] transition-colors"
+        >
+          GO
+        </button>
+      </div>
+    )}
+
+    {/* Tyre Fitting Tab */}
+    {activeTab === 'tyre-fitting' && (
+      <div className="space-y-4">
+        <div className="flex">
+          <div className="flex items-center px-3 bg-[var(--primary-blue)] rounded-l-lg">
+            <div className="w-6 h-4 bg-[var(--primary-blue-dark)] rounded-sm flex items-center justify-center">
+              <span className="text-white text-xs font-bold">GB</span>
+            </div>
+          </div>
+          <input
+            type="text"
+            placeholder="VEHICLE REG. NO."
+            className="flex-1 px-4 py-3 bg-[var(--primary-blue-lighter)] text-black font-bold placeholder-gray-700 rounded-r-lg focus:outline-none"
+          />
+        </div>
+
+        <div className="flex items-center gap-4 text-white">
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="tyreType"
+              value="fully-fitted"
+              checked={tyreType === 'fully-fitted'}
+              onChange={(e) => setTyreType(e.target.value)}
+              className="text-blue-600"
+            />
+            Fully Fitted
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="tyreType"
+              value="collection"
+              checked={tyreType === 'collection'}
+              onChange={(e) => setTyreType(e.target.value)}
+              className="text-blue-600"
+            />
+            Collection
+          </label>
+        </div>
+
+        <button
+          onClick={handleSearch}
+          className="w-full bg-[var(--primary-blue)] text-white py-3 rounded-lg font-bold hover:bg-[var(--primary-blue-dark)] transition-colors flex items-center justify-center gap-2"
+        >
+          <Search className="w-4 h-4" />
+          GO
+        </button>
+
+        <div className="grid grid-cols-3 gap-2">
+          <select
+            value={tyreSize.width}
+            onChange={(e) => setTyreSize({ ...tyreSize, width: e.target.value })}
+            className="px-3 py-2 bg-white text-black rounded focus:outline-none"
+          >
+            <option value="205">205</option>
+            <option value="215">215</option>
+            <option value="225">225</option>
+          </select>
+          <select
+            value={tyreSize.profile}
+            onChange={(e) => setTyreSize({ ...tyreSize, profile: e.target.value })}
+            className="px-3 py-2 bg-white text-black rounded focus:outline-none"
+          >
+            <option value="55">55</option>
+            <option value="60">60</option>
+            <option value="65">65</option>
+          </select>
+          <select
+            value={tyreSize.rim}
+            onChange={(e) => setTyreSize({ ...tyreSize, rim: e.target.value })}
+            className="px-3 py-2 bg-white text-black rounded focus:outline-none"
+          >
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+          </select>
+        </div>
+
+        <div className="flex items-center gap-4 text-white">
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="tyreType2"
+              value="fully-fitted"
+              checked={tyreType === 'fully-fitted'}
+              onChange={(e) => setTyreType(e.target.value)}
+              className="text-blue-600"
+            />
+            Fully Fitted
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="tyreType2"
+              value="collection"
+              checked={tyreType === 'collection'}
+              onChange={(e) => setTyreType(e.target.value)}
+              className="text-blue-600"
+            />
+            Collection
+          </label>
+        </div>
+
+        <button
+          onClick={handleSearch}
+          className="w-full bg-[var(--primary-blue)] text-white py-3 rounded-lg font-bold hover:bg-[var(--primary-blue-dark)] transition-colors"
+        >
+          GO
+        </button>
+      </div>
+    )}
+
+    {/* Book MOT Tab */}
+    {activeTab === 'book-mot' && (
+      <div className="space-y-4">
+        <div className="flex">
+          <div className="flex items-center px-3 bg-[var(--primary-blue)] rounded-l-lg">
+            <div className="w-6 h-4 bg-[var(--primary-blue-dark)] rounded-sm flex items-center justify-center">
+              <span className="text-white text-xs font-bold">GB</span>
+            </div>
+          </div>
+          <input
+            type="text"
+            value={regNo}
+            onChange={(e) => setRegNo(e.target.value.toUpperCase())}
+            placeholder="ENTER REG NO."
+            className="flex-1 px-4 py-3 bg-[var(--primary-blue-lighter)] text-black font-bold placeholder-gray-700 rounded-r-lg focus:outline-none"
+          />
+        </div>
+
+        <p className="text-white text-center">Don't know your vehicle registration?</p>
+
+        <button
+          onClick={handleSearch}
+          className="w-full bg-[var(--primary-blue)] text-white py-3 rounded-lg font-bold hover:bg-[var(--primary-blue-dark)] transition-colors flex items-center justify-center gap-2"
+        >
+          <Search className="w-4 h-4" />
+          Search
+        </button>
+
+        <Link
+          to="/mot-check"
+          className="w-full bg-[var(--primary-blue-dark)] text-white py-3 rounded-lg font-bold hover:bg-[var(--primary-blue)] transition-colors flex items-center justify-center gap-2"
+        >
+          <Shield className="w-5 h-5" />
+          IS YOUR MOT DUE?
+        </Link>
+      </div>
+    )}
+  </div>
+);
+
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-gradient-main)' }}>
@@ -68,37 +319,9 @@ const Home = () => {
                 <p className="text-lg mb-8" style={{ color: 'var(--text-muted)' }}>
                   From MOT testing to comprehensive repairs, we keep your vehicle running at its best with professional care.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Link to="/booking" 
-                        className="hover-scale px-8 py-4 rounded-xl text-lg font-semibold text-center" 
-                        style={{ 
-                          background: 'var(--bg-gradient-card)', 
-                          color: 'white',
-                          borderRadius: 'var(--radius-md)',
-                          boxShadow: 'var(--shadow-md)',
-                          transition: 'var(--transition-normal)'
-                        }}>
-                    Book Now
-                  </Link>
-                  <Link to="/services" 
-                        className="px-8 py-4 rounded-xl text-lg font-semibold border text-center hover" 
-                    style={{
-                      borderColor: 'var(--primary-blue)',
-                      color: 'var(--primary-blue)',
-                      borderRadius: 'var(--radius-md)',
-                      transition: 'background 0.2s, color 0.2s, var(--transition-normal)'
-                    }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.background = 'var(--primary-blue)';
-                      e.currentTarget.style.color = 'white';
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.background = '';
-                      e.currentTarget.style.color = 'var(--primary-blue)';
-                    }}>
-                    View Services
-                  </Link>
-                </div>
+                
+                {/* Booking System */}
+                <BookingSystem />
                 
                 {/* Quick Info */}
                 <div className="mt-10 flex flex-wrap gap-6">
