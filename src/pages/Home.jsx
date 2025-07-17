@@ -62,7 +62,7 @@ const Home = () => {
 
   const BookingSystem = () => (
   <div
-    className="mt-8 p-6 rounded-xl"
+    className="mt-8 p-4 rounded-xl w-full max-w-sm mx-auto"
     style={{
       background: 'var(--bg-gradient-main)',
       borderRadius: 'var(--radius-lg)',
@@ -70,52 +70,59 @@ const Home = () => {
     }}
   >
     {/* Tab Navigation */}
-    <div className="flex flex-wrap gap-2 mb-6">
-      <button
-        onClick={() => setActiveTab('services')}
-        className={`px-4 py-2 font-medium transition-all duration-300 ${
-          activeTab === 'services'
-            ? 'bg-white text-black'
-            : 'border border-white text-white hover:bg-white hover:text-black'
-        }`}
-        style={{ borderRadius: 'var(--radius-md)' }}
-      >
-        Services
-      </button>
-      <button
-        onClick={() => setActiveTab('tyre-fitting')}
-        className={`px-4 py-2 font-medium transition-all duration-300 ${
-          activeTab === 'tyre-fitting'
-            ? 'bg-white text-black'
-            : 'border border-white text-white hover:bg-white hover:text-black'
-        }`}
-        style={{ borderRadius: 'var(--radius-md)' }}
-      >
-        Tyre Fitting
-      </button>
-      <button
-        onClick={() => setActiveTab('book-mot')}
-        className={`px-4 py-2 font-medium transition-all duration-300 ${
-          activeTab === 'book-mot'
-            ? 'bg-white text-black'
-            : 'border border-white text-white hover:bg-white hover:text-black'
-        }`}
-        style={{ borderRadius: 'var(--radius-md)' }}
-      >
-        <Shield className="w-4 h-4 inline mr-2" />
-        Book MOT
-      </button>
+    <div className="space-y-2 mb-6">
+      {/* First row: Services and Tyre Fitting */}
+      <div className="flex gap-2">
+        <button
+          onClick={() => setActiveTab('services')}
+          className={`flex-1 px-3 py-2 text-sm font-medium transition-all duration-300 ${
+            activeTab === 'services'
+              ? 'bg-white text-black'
+              : 'border border-white text-white hover:bg-white hover:text-black'
+          }`}
+          style={{ borderRadius: 'var(--radius-md)' }}
+        >
+          Services
+        </button>
+        <button
+          onClick={() => setActiveTab('tyre-fitting')}
+          className={`flex-1 px-3 py-2 text-sm font-medium transition-all duration-300 ${
+            activeTab === 'tyre-fitting'
+              ? 'bg-white text-black'
+              : 'border border-white text-white hover:bg-white hover:text-black'
+          }`}
+          style={{ borderRadius: 'var(--radius-md)' }}
+        >
+          Tyre Fitting
+        </button>
+      </div>
+      
+      {/* Second row: Book MOT */}
+      <div className="flex">
+        <button
+          onClick={() => setActiveTab('book-mot')}
+          className={`w-full px-3 py-2 text-sm font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
+            activeTab === 'book-mot'
+              ? 'bg-white text-black'
+              : 'border border-white text-white hover:bg-white hover:text-black'
+          }`}
+          style={{ borderRadius: 'var(--radius-md)' }}
+        >
+          <Shield className="w-4 h-4" />
+          Book MOT
+        </button>
+      </div>
     </div>
 
     {/* Services Tab */}
     {activeTab === 'services' && (
       <div className="space-y-4">
         <div>
-          <label className="block text-white font-medium mb-2">
+          <label className="block text-white font-medium mb-2 text-sm">
             Enter your Reg. No. (After select service)
           </label>
           <div className="flex">
-            <div className="flex items-center px-3 bg-[var(--primary-blue)] rounded-l-lg">
+            <div className="flex items-center px-2 bg-[var(--primary-blue)] rounded-l-lg">
               <div className="w-6 h-4 bg-[var(--primary-blue-dark)] rounded-sm flex items-center justify-center">
                 <span className="text-white text-xs font-bold">GB</span>
               </div>
@@ -125,7 +132,7 @@ const Home = () => {
               value={regNo}
               onChange={(e) => setRegNo(e.target.value.toUpperCase())}
               placeholder="ENTER REG NO."
-              className="flex-1 px-4 py-3 bg-[var(--primary-blue-lighter)] text-black font-bold placeholder-gray-700 rounded-r-lg focus:outline-none"
+              className="flex-1 px-3 py-3 bg-[var(--primary-blue-lighter)] text-black font-bold placeholder-gray-700 rounded-r-lg focus:outline-none text-sm"
             />
           </div>
         </div>
@@ -142,7 +149,7 @@ const Home = () => {
     {activeTab === 'tyre-fitting' && (
       <div className="space-y-4">
         <div className="flex">
-          <div className="flex items-center px-3 bg-[var(--primary-blue)] rounded-l-lg">
+          <div className="flex items-center px-2 bg-[var(--primary-blue)] rounded-l-lg">
             <div className="w-6 h-4 bg-[var(--primary-blue-dark)] rounded-sm flex items-center justify-center">
               <span className="text-white text-xs font-bold">GB</span>
             </div>
@@ -150,12 +157,12 @@ const Home = () => {
           <input
             type="text"
             placeholder="VEHICLE REG. NO."
-            className="flex-1 px-4 py-3 bg-[var(--primary-blue-lighter)] text-black font-bold placeholder-gray-700 rounded-r-lg focus:outline-none"
+            className="flex-1 px-3 py-3 bg-[var(--primary-blue-lighter)] text-black font-bold placeholder-gray-700 rounded-r-lg focus:outline-none text-sm"
           />
         </div>
 
-        <div className="flex items-center gap-4 text-white">
-          <label className="flex items-center gap-2">
+        <div className="flex items-center gap-3 text-white">
+          <label className="flex items-center gap-1 text-sm">
             <input
               type="radio"
               name="tyreType"
@@ -166,7 +173,7 @@ const Home = () => {
             />
             Fully Fitted
           </label>
-          <label className="flex items-center gap-2">
+          <label className="flex items-center gap-1 text-sm">
             <input
               type="radio"
               name="tyreType"
@@ -191,7 +198,7 @@ const Home = () => {
           <select
             value={tyreSize.width}
             onChange={(e) => setTyreSize({ ...tyreSize, width: e.target.value })}
-            className="px-3 py-2 bg-white text-black rounded focus:outline-none"
+            className="px-2 py-2 bg-white text-black rounded focus:outline-none text-sm"
           >
             <option value="205">205</option>
             <option value="215">215</option>
@@ -200,7 +207,7 @@ const Home = () => {
           <select
             value={tyreSize.profile}
             onChange={(e) => setTyreSize({ ...tyreSize, profile: e.target.value })}
-            className="px-3 py-2 bg-white text-black rounded focus:outline-none"
+            className="px-2 py-2 bg-white text-black rounded focus:outline-none text-sm"
           >
             <option value="55">55</option>
             <option value="60">60</option>
@@ -209,7 +216,7 @@ const Home = () => {
           <select
             value={tyreSize.rim}
             onChange={(e) => setTyreSize({ ...tyreSize, rim: e.target.value })}
-            className="px-3 py-2 bg-white text-black rounded focus:outline-none"
+            className="px-2 py-2 bg-white text-black rounded focus:outline-none text-sm"
           >
             <option value="16">16</option>
             <option value="17">17</option>
@@ -217,8 +224,8 @@ const Home = () => {
           </select>
         </div>
 
-        <div className="flex items-center gap-4 text-white">
-          <label className="flex items-center gap-2">
+        <div className="flex items-center gap-3 text-white">
+          <label className="flex items-center gap-1 text-sm">
             <input
               type="radio"
               name="tyreType2"
@@ -229,7 +236,7 @@ const Home = () => {
             />
             Fully Fitted
           </label>
-          <label className="flex items-center gap-2">
+          <label className="flex items-center gap-1 text-sm">
             <input
               type="radio"
               name="tyreType2"
@@ -255,7 +262,7 @@ const Home = () => {
     {activeTab === 'book-mot' && (
       <div className="space-y-4">
         <div className="flex">
-          <div className="flex items-center px-3 bg-[var(--primary-blue)] rounded-l-lg">
+          <div className="flex items-center px-2 bg-[var(--primary-blue)] rounded-l-lg">
             <div className="w-6 h-4 bg-[var(--primary-blue-dark)] rounded-sm flex items-center justify-center">
               <span className="text-white text-xs font-bold">GB</span>
             </div>
@@ -265,11 +272,11 @@ const Home = () => {
             value={regNo}
             onChange={(e) => setRegNo(e.target.value.toUpperCase())}
             placeholder="ENTER REG NO."
-            className="flex-1 px-4 py-3 bg-[var(--primary-blue-lighter)] text-black font-bold placeholder-gray-700 rounded-r-lg focus:outline-none"
+            className="flex-1 px-3 py-3 bg-[var(--primary-blue-lighter)] text-black font-bold placeholder-gray-700 rounded-r-lg focus:outline-none text-sm"
           />
         </div>
 
-        <p className="text-white text-center">Don't know your vehicle registration?</p>
+        <p className="text-white text-center text-sm">Don't know your vehicle registration?</p>
 
         <button
           onClick={handleSearch}
