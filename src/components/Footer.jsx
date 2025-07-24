@@ -74,8 +74,7 @@ const Footer = () => {
                 <div className="text-sm text-gray-300">
                   <p>9 Chelson St, Longton,</p>
                   <p>Stoke-on-Trent ST3 1PT</p>
-                  <p>123 Main Street</p>
-                  <p>London, UK</p>
+                
                 </div>
               </div>
               <div className="flex items-center space-x-3">
