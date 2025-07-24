@@ -86,12 +86,7 @@ const Footer = () => {
                 <p className="text-gray-300 text-sm">info@accessautoservices.co.uk</p>
               </div>
               <div className="flex items-start space-x-3">
-                <Clock className="w-5 h-5 text-blue-400 mt-1" />
-                <div className="text-gray-300 text-sm">
-                  <p>Mon-Fri: 8:00 AM - 6:00 PM</p>
-                  <p>Saturday: 8:00 AM - 4:00 PM</p>
-                  <p>Sunday: Closed</p>
-                </div>
+
               </div>
             </div>
           </div>
