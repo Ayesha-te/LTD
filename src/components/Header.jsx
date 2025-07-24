@@ -82,10 +82,7 @@ const Header = () => {
 
              
 
-              <div className="hidden md:flex items-center gap-2">
-                <Clock size={16} />
-                <span>Mon-Fri: 8AM-6PM, Sat: 8AM-4PM</span>
-              </div>
+            
 
             </div>
             <div className="flex items-center gap-4">
