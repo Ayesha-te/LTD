@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Phone, Clock, Mail, Send, CheckCircle, ExternalLink } from 'lucide-react';
+import { MapPin, Phone, Mail, Send, CheckCircle, ExternalLink } from 'lucide-react';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -22,7 +22,6 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission here
     console.log('Form submitted:', formData);
     setIsSubmitted(true);
     setTimeout(() => setIsSubmitted(false), 3000);
@@ -36,15 +35,25 @@ const Contact = () => {
     });
   };
 
-  // Contact information sections for better organization
+  // Contact info with emergency and Google Maps link
   const contactInfo = [
     {
       icon: <MapPin className="w-6 h-6" />,
       title: 'Visit Our Garage',
       content: (
-        <p>9 Chelson St<br />
-          Longton, Stoke-on-Trent<br />
-          ST3 1PT</p>
+        <>
+          <p>9 Chelson St, Longton,</p>
+          <p>Stoke-on-Trent ST3 1PT</p>
+          <a
+            href="https://maps.google.com/?q=9+Chelson+St+Longton+Stoke-on-Trent+ST3+1PT"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center mt-1 text-blue-600 hover:underline"
+          >
+            <ExternalLink className="w-4 h-4 mr-1" />
+            View on Google Maps
+          </a>
+        </>
       )
     },
     {
@@ -73,19 +82,21 @@ const Contact = () => {
       )
     },
     {
-      icon: <Clock className="w-6 h-6" />,
-      title: 'Opening Hours',
+      icon: <Send className="w-6 h-6" />,
+      title: 'Emergency Contact',
       content: (
-        <div className="space-y-1">
-          <p>Monday - Friday: 8:00 AM - 6:00 PM</p>
-          <p>Saturday: 8:00 AM - 4:00 PM</p>
-          <p>Sunday: Closed</p>
-        </div>
+        <p>
+          <a
+            href="tel: 01782 405229"
+            className="text-red-600 font-semibold hover:text-red-800 transition-colors duration-300"
+          >
+            Emergency:  01782 405229
+          </a>
+        </p>
       )
     }
   ];
 
-  // Form fields configuration for looping
   const formFields = [
     {
       id: 'name',
@@ -148,38 +159,50 @@ const Contact = () => {
           </p>
         </div>
       </section>
-      
-      {/* Contact Form and Information */}
+
+      {/* Contact Form and Info */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Form */}
-            <div className="glass-effect rounded-lg shadow-lg p-8" style={{ 
-              background: 'white', 
-              borderRadius: 'var(--radius-lg)',
-              boxShadow: 'var(--shadow-lg)',
-              border: '1px solid var(--card-border)'
-            }}>
-              <h2 className="text-3xl font-bold mb-6" style={{ color: 'var(--text-dark)' }}>Send us a Message</h2>
-              
+            <div
+              className="glass-effect rounded-lg shadow-lg p-8"
+              style={{
+                background: 'white',
+                borderRadius: 'var(--radius-lg)',
+                boxShadow: 'var(--shadow-lg)',
+                border: '1px solid var(--card-border)'
+              }}
+            >
+              <h2 className="text-3xl font-bold mb-6" style={{ color: 'var(--text-dark)' }}>
+                Send us a Message
+              </h2>
+
               {isSubmitted && (
-                <div className="border px-4 py-3 rounded-lg mb-6 flex items-center" style={{ 
-                  background: 'rgba(16, 185, 129, 0.1)',
-                  borderColor: 'rgba(16, 185, 129, 0.5)',
-                  color: '#047857',
-                  borderRadius: 'var(--radius-md)'
-                }}>
+                <div
+                  className="border px-4 py-3 rounded-lg mb-6 flex items-center"
+                  style={{
+                    background: 'rgba(16, 185, 129, 0.1)',
+                    borderColor: 'rgba(16, 185, 129, 0.5)',
+                    color: '#047857',
+                    borderRadius: 'var(--radius-md)'
+                  }}
+                >
                   <CheckCircle className="w-5 h-5 mr-2" />
                   Thank you! Your message has been sent successfully.
                 </div>
               )}
-              
+
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {formFields.map((field, index) => (
-                    field.type !== 'textarea' && field.type !== 'select' && (
-                      <div key={index} className={field.colSpan === 2 ? "md:col-span-2" : ""}>
-                        <label htmlFor={field.id} className="block text-sm font-medium mb-2" style={{ color: 'var(--text-muted)' }}>
+                  {formFields.map((field, index) =>
+                    field.type !== 'textarea' && field.type !== 'select' ? (
+                      <div key={index} className={field.colSpan === 2 ? 'md:col-span-2' : ''}>
+                        <label
+                          htmlFor={field.id}
+                          className="block text-sm font-medium mb-2"
+                          style={{ color: 'var(--text-muted)' }}
+                        >
                           {field.label}
                         </label>
                         <input
@@ -191,74 +214,84 @@ const Contact = () => {
                           required={field.required}
                           className="w-full px-4 py-3 border rounded-lg focus:ring-2 transition-all duration-300"
                           placeholder={field.placeholder}
-                          style={{ 
-                            borderColor: 'var(--card-border)', 
+                          style={{
+                            borderColor: 'var(--card-border)',
                             borderRadius: 'var(--radius-md)'
                           }}
                         />
                       </div>
-                    )
-                  ))}
+                    ) : null
+                  )}
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {formFields.map((field, index) => (
-                    field.type === 'select' && (
-                      <div key={index} className={field.colSpan === 2 ? "md:col-span-2" : ""}>
-                        <label htmlFor={field.id} className="block text-sm font-medium mb-2" style={{ color: 'var(--text-muted)' }}>
+                  {formFields.map(
+                    (field, index) =>
+                      field.type === 'select' && (
+                        <div key={index} className={field.colSpan === 2 ? 'md:col-span-2' : ''}>
+                          <label
+                            htmlFor={field.id}
+                            className="block text-sm font-medium mb-2"
+                            style={{ color: 'var(--text-muted)' }}
+                          >
+                            {field.label}
+                          </label>
+                          <select
+                            id={field.id}
+                            name={field.id}
+                            value={formData[field.id]}
+                            onChange={handleChange}
+                            required={field.required}
+                            className="w-full px-4 py-3 border rounded-lg focus:ring-2 transition-all duration-300 appearance-none bg-white"
+                            style={{
+                              borderColor: 'var(--card-border)',
+                              borderRadius: 'var(--radius-md)'
+                            }}
+                          >
+                            {field.options.map((option, optIndex) => (
+                              <option key={optIndex} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )
+                  )}
+                </div>
+
+                {formFields.map(
+                  (field, index) =>
+                    field.type === 'textarea' && (
+                      <div key={index} className={field.colSpan === 2 ? 'md:col-span-2' : ''}>
+                        <label
+                          htmlFor={field.id}
+                          className="block text-sm font-medium mb-2"
+                          style={{ color: 'var(--text-muted)' }}
+                        >
                           {field.label}
                         </label>
-                        <select
+                        <textarea
                           id={field.id}
                           name={field.id}
                           value={formData[field.id]}
                           onChange={handleChange}
                           required={field.required}
-                          className="w-full px-4 py-3 border rounded-lg focus:ring-2 transition-all duration-300 appearance-none bg-white"
-                          style={{ 
-                            borderColor: 'var(--card-border)', 
+                          rows={field.rows}
+                          className="w-full px-4 py-3 border rounded-lg focus:ring-2 transition-all duration-300 resize-none"
+                          placeholder={field.placeholder}
+                          style={{
+                            borderColor: 'var(--card-border)',
                             borderRadius: 'var(--radius-md)'
                           }}
-                        >
-                          {field.options.map((option, optIndex) => (
-                            <option key={optIndex} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
+                        />
                       </div>
                     )
-                  ))}
-                </div>
-                
-                {formFields.map((field, index) => (
-                  field.type === 'textarea' && (
-                    <div key={index} className={field.colSpan === 2 ? "md:col-span-2" : ""}>
-                      <label htmlFor={field.id} className="block text-sm font-medium mb-2" style={{ color: 'var(--text-muted)' }}>
-                        {field.label}
-                      </label>
-                      <textarea
-                        id={field.id}
-                        name={field.id}
-                        value={formData[field.id]}
-                        onChange={handleChange}
-                        required={field.required}
-                        rows={field.rows}
-                        className="w-full px-4 py-3 border rounded-lg focus:ring-2 transition-all duration-300 resize-none"
-                        placeholder={field.placeholder}
-                        style={{ 
-                          borderColor: 'var(--card-border)', 
-                          borderRadius: 'var(--radius-md)'
-                        }}
-                      />
-                    </div>
-                  )
-                ))}
-                
+                )}
+
                 <button
                   type="submit"
                   className="w-full py-3 px-6 rounded-lg hover-scale flex items-center justify-center font-semibold text-white"
-                  style={{ 
+                  style={{
                     background: 'var(--bg-gradient-card)',
                     borderRadius: 'var(--radius-md)',
                     boxShadow: 'var(--shadow-md)',
@@ -270,90 +303,81 @@ const Contact = () => {
                 </button>
               </form>
             </div>
-            
+
             {/* Contact Information */}
             <div className="space-y-8">
-              <div className="glass-effect rounded-lg shadow-lg p-8" style={{ 
-                background: 'white', 
-                borderRadius: 'var(--radius-lg)',
-                boxShadow: 'var(--shadow-lg)',
-                border: '1px solid var(--card-border)'
-              }}>
+              <div
+                className="glass-effect rounded-lg shadow-lg p-8"
+                style={{
+                  background: 'white',
+                  borderRadius: 'var(--radius-lg)',
+                  boxShadow: 'var(--shadow-lg)',
+                  border: '1px solid var(--card-border)'
+                }}
+              >
                 <h2 className="text-3xl font-bold mb-6" style={{ color: 'var(--text-dark)' }}>
                   Get in Touch
                 </h2>
                 <div className="space-y-6">
                   {contactInfo.map((info, index) => (
                     <div key={index} className="flex items-start space-x-4">
-                      <div className="p-3 rounded-lg" style={{ 
-                        background: 'var(--primary-blue-lighter)',
-                        color: 'var(--primary-blue)'
-                      }}>
+                      <div
+                        className="p-3 rounded-lg"
+                        style={{
+                          background: 'var(--primary-blue-lighter)',
+                          color: 'var(--primary-blue)'
+                        }}
+                      >
                         {info.icon}
                       </div>
                       <div>
-                        <h3 className="font-semibold mb-1" style={{ color: 'var(--text-dark)' }}>{info.title}</h3>
-                        <div style={{ color: 'var(--text-muted)' }}>
-                          {info.content}
-                        </div>
+                        <h3 className="font-semibold mb-1" style={{ color: 'var(--text-dark)' }}>
+                          {info.title}
+                        </h3>
+                        <div style={{ color: 'var(--text-muted)' }}>{info.content}</div>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-              
-              {/* Emergency Contact */}
-              <div className="glass-effect rounded-lg p-6" style={{ 
-                background: 'rgba(239, 68, 68, 0.05)',
-                borderRadius: 'var(--radius-lg)',
-                border: '1px solid rgba(239, 68, 68, 0.3)'
-              }}>
-                <h3 className="text-xl font-bold mb-3 text-red-800">Emergency Breakdown?</h3>
-                <p className="text-red-700 mb-4">
-                  If you're experiencing a breakdown, call us immediately:
-                </p>
-                <a
-                  href="tel:07700900123"
-                  className="inline-block text-white px-6 py-3 rounded-lg hover-scale font-semibold"
-                  style={{ 
-                    background: 'linear-gradient(to right, #ef4444, #dc2626)',
-                    borderRadius: 'var(--radius-md)',
-                    boxShadow: 'var(--shadow-md)',
-                    transition: 'var(--transition-normal)'
-                  }}
-                >
-                  Emergency: 07700 900 123
-                </a>
-              </div>
             </div>
           </div>
         </div>
       </section>
-      
+
       {/* Map Section */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4" style={{ color: 'var(--text-dark)' }}>Find Us</h2>
+            <h2 className="text-4xl font-bold mb-4" style={{ color: 'var(--text-dark)' }}>
+              Find Us
+            </h2>
             <p className="text-xl" style={{ color: 'var(--text-muted)' }}>
-              Located in the heart of London, easily accessible by car or public transport
+              Located in Stoke-on-Trent, easily accessible by car or public transport
             </p>
           </div>
-          
-          <div className="rounded-lg h-96 flex flex-col items-center justify-center" style={{ 
-            background: 'var(--primary-blue-lighter)',
-            borderRadius: 'var(--radius-lg)'
-          }}>
+
+          <div
+            className="rounded-lg h-96 flex flex-col items-center justify-center"
+            style={{
+              background: 'var(--primary-blue-lighter)',
+              borderRadius: 'var(--radius-lg)'
+            }}
+          >
             <div className="text-center p-8">
               <MapPin className="w-16 h-16 mx-auto mb-4" style={{ color: 'var(--primary-blue)' }} />
-              <p className="text-lg" style={{ color: 'var(--text-dark)' }}>Interactive map would be embedded here</p>
-              <p className="text-sm mb-4" style={{ color: 'var(--text-muted)' }}>123 Main Street, London, UK</p>
-              <a 
-                href="https://maps.google.com/?q=123+Main+Street+London+UK" 
-                target="_blank" 
+              <p className="text-lg" style={{ color: 'var(--text-dark)' }}>
+                Interactive map would be embedded here
+              </p>
+              <p className="text-sm mb-4" style={{ color: 'var(--text-muted)' }}>
+                9 Chelson St, Longton, Stoke-on-Trent ST3 1PT
+              </p>
+              <a
+                href="https://maps.google.com/?q=9+Chelson+St+Longton+Stoke-on-Trent+ST3+1PT"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center px-4 py-2 rounded-lg border hover-scale"
-                style={{ 
+                style={{
                   borderColor: 'var(--primary-blue)',
                   color: 'var(--primary-blue)',
                   transition: 'var(--transition-normal)',
@@ -367,18 +391,20 @@ const Contact = () => {
           </div>
         </div>
       </section>
-      
+
       {/* FAQ Quick Links */}
       <section className="py-20" style={{ background: 'var(--bg-gradient-secondary)' }}>
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold mb-6" style={{ color: 'var(--text-dark)' }}>Need Quick Answers?</h2>
+          <h2 className="text-4xl font-bold mb-6" style={{ color: 'var(--text-dark)' }}>
+            Need Quick Answers?
+          </h2>
           <p className="text-xl mb-8" style={{ color: 'var(--text-muted)' }}>
             Check out our frequently asked questions for immediate answers to common queries
           </p>
           <a
             href="/faq"
             className="inline-block text-white px-8 py-4 rounded-lg text-lg font-semibold hover-scale"
-            style={{ 
+            style={{
               background: 'var(--bg-gradient-card)',
               borderRadius: 'var(--radius-md)',
               boxShadow: 'var(--shadow-md)',
