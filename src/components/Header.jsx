@@ -70,7 +70,7 @@ const Header = () => {
                 <MapPin size={16} />
                 <span className="hidden md:inline">Address: 9 Chelson St, Longton, Stoke-on-Trent ST3 1PT</span>
 
-                <span className="hidden md:inline">123 Main Street, London, UK</span>
+              
 
                 <span className="md:hidden">Our Location</span>
               </a>
