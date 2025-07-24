@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 
 import brake from '../assets/brake.jpg';
-import MOT from '../assets/regular_services.jpg';
+import MOT from '../assets/MOT.jpg';
 import vehicleRepairs from '../assets/vehicle_repairs.jpg';
 import regularServices from '../assets/regular_services.jpg';
 import batteryImg from '../assets/battery.jpg';
