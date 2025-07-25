@@ -1,10 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { MapPin, Phone, Mail, Facebook, Clock } from 'lucide-react';
-
+import { Link, useLocation } from 'react-router-dom';
+import { MapPin, Phone, Mail, Facebook, Instagram, Twitter } from 'lucide-react';
 import logo from '../assets/logo.png';
 
 const Footer = () => {
+  const location = useLocation();
+  const isOnServicesPage = location.pathname === '/services';
+
+  // Helper to create link that either scrolls on services page or navigates there
+  const serviceLink = (id) => isOnServicesPage ? `#${id}` : `/services#${id}`;
+
   return (
     <footer className="bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-12">
@@ -13,7 +18,6 @@ const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
               <img src={logo} alt="Access Auto Services" className="w-10 h-10 object-contain" />
-              {/* Removed Car icon */}
               <div>
                 <h3 className="text-xl font-bold">Access Auto Services</h3>
                 <p className="text-gray-400 text-sm">Professional Vehicle Care</p>
@@ -33,6 +37,22 @@ const Footer = () => {
               >
                 <Facebook className="w-5 h-5" />
               </a>
+              <a
+                href="https://www.instagram.com/accessautoservices"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-pink-500 transition-colors duration-300"
+              >
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a
+                href="https://twitter.com/accessautoserv"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-blue-500 transition-colors duration-300"
+              >
+                <Twitter className="w-5 h-5" />
+              </a>
             </div>
           </div>
 
@@ -40,14 +60,51 @@ const Footer = () => {
           <div className="space-y-4">
             <h4 className="text-lg font-semibold text-blue-400">Our Services</h4>
             <ul className="space-y-2">
-              <li><Link to="/services#mot" className="text-gray-300 hover:text-white transition">MOT Testing</Link></li>
-              <li><Link to="/services#repairs" className="text-gray-300 hover:text-white transition">Vehicle Repairs</Link></li>
-              <li><Link to="/services#servicing" className="text-gray-300 hover:text-white transition">Servicing</Link></li>
-              <li><Link to="/services#brakes" className="text-gray-300 hover:text-white transition">Brakes</Link></li>
-              <li><Link to="/services#batteries" className="text-gray-300 hover:text-white transition">Batteries</Link></li>
-              <li><Link to="/services#clutches" className="text-gray-300 hover:text-white transition">Clutches</Link></li>
-              <li><Link to="/services#exhaust" className="text-gray-300 hover:text-white transition">Exhaust Systems</Link></li>
-              <li><Link to="/services#diagnostics" className="text-gray-300 hover:text-white transition">Diagnostics</Link></li>
+              <li>
+                <Link to={serviceLink('mot')} className="text-gray-300 hover:text-white transition">
+                  MOT Test
+                </Link>
+              </li>
+              <li>
+                <Link to={serviceLink('service')} className="text-gray-300 hover:text-white transition">
+                  Full Service
+                </Link>
+              </li>
+              <li>
+                <Link to={serviceLink('repairs')} className="text-gray-300 hover:text-white transition">
+                  Vehicle Repairs
+                </Link>
+              </li>
+              <li>
+                <Link to={serviceLink('brakes')} className="text-gray-300 hover:text-white transition">
+                  Brake Services
+                </Link>
+              </li>
+              <li>
+                <Link to={serviceLink('batteries')} className="text-gray-300 hover:text-white transition">
+                  Battery Services
+                </Link>
+              </li>
+              <li>
+                <Link to={serviceLink('clutches')} className="text-gray-300 hover:text-white transition">
+                  Clutch Repairs
+                </Link>
+              </li>
+              <li>
+                <Link to={serviceLink('exhaust')} className="text-gray-300 hover:text-white transition">
+                  Exhaust Systems
+                </Link>
+              </li>
+              <li>
+                <Link to={serviceLink('diagnostics')} className="text-gray-300 hover:text-white transition">
+                  Vehicle Diagnostics
+                </Link>
+              </li>
+              <li>
+                <Link to={serviceLink('dpf')} className="text-gray-300 hover:text-white transition">
+                  DPF Cleaning
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -74,7 +131,6 @@ const Footer = () => {
                 <div className="text-sm text-gray-300">
                   <p>9 Chelson St, Longton,</p>
                   <p>Stoke-on-Trent ST3 1PT</p>
-                
                 </div>
               </div>
               <div className="flex items-center space-x-3">
@@ -84,9 +140,6 @@ const Footer = () => {
               <div className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-blue-400" />
                 <p className="text-gray-300 text-sm">info@accessautoservices.co.uk</p>
-              </div>
-              <div className="flex items-start space-x-3">
-
               </div>
             </div>
           </div>

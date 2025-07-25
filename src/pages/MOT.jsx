@@ -1,39 +1,46 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Car, Shield, Clock, Users, CheckCircle, Wrench, Battery, Zap, Settings, Award, MapPin, Phone, Search, ChevronDown, ShoppingCart, X as XIcon
-} from 'lucide-react';
+import { Shield, ShoppingCart, X as XIcon, Search, ChevronRight } from 'lucide-react';
+import MOTImage from '../assets/MOT.jpg';
+// Provided service prices
+const SERVICE_PRICES = {
+  "MOT - Class 4": 40.00,
+  "MOT - Class 5": 59.00,
+  "MOT - Class 7": 60.00,
+  "MOT Base": 30.00,
+  "Regular Servicing": 30.00,
+  "FREE Re-Test": 0.00,
+  "Brake Pads (Front)": 120.00,
+  "Brake Pads + Discs": 260.00,
+  "Clutch Replacement": 580.00,
+  "Battery Replacement": 160.00
+};
 
-import brake from '../assets/brake.jpg';
-import hero from "../assets/MOT.jpg"
-import MOT from '../assets/bg1.jpg';
-import vehicleRepairs from '../assets/vehicle_repairs.jpg';
-import regularServices from '../assets/regular_services.jpg';
-import batteryImg from '../assets/battery.jpg';
-import clutch from '../assets/clutch.jpg';
-import why from '../assets/why.jpg';
-import why2 from '../assets/why2.jpg';
-import why3 from '../assets/why3.jpg';
-
+// Updated categories with provided prices
 const allCategories = [
   {
-    id: 'mot', label: 'MOT', services: [
-      { id: 'mot-base', name: 'MOT', price: 30},
-      { id: 'mot_iv', name: 'MOT IV', price: 45 },
-      { id: 'mot_v', name: 'MOT V', price: 49 },
-      { id: 'motvii', name: 'MOT VII', price: 60 },
-      
+    id: 'mot',
+    label: 'MOT',
+    services: [
+      { id: 'mot-class4', name: 'MOT - Class 4', price: SERVICE_PRICES["MOT - Class 4"] },
+      { id: 'mot-class5', name: 'MOT - Class 5', price: SERVICE_PRICES["MOT - Class 5"] },
+      { id: 'mot-class7', name: 'MOT - Class 7', price: SERVICE_PRICES["MOT - Class 7"] },
+      { id: 'mot-base', name: 'MOT Base', price: SERVICE_PRICES["MOT Base"] },
     ]
   },
   {
-    id: 'servicing', label: 'Servicing', services: [
+    id: 'servicing',
+    label: 'Servicing',
+    services: [
       { id: 'interim', name: 'Interim Service (Oil Service)', price: 108 },
       { id: 'engine', name: 'Engine Service (mid service)', price: 167.87 },
       { id: 'full', name: 'Full Service (major)', price: 226.79 }
     ]
   },
   {
-    id: 'brakes', label: 'Brakes', services: [
+    id: 'brakes',
+    label: 'Brakes',
+    services: [
       { id: 'front_brake_pads', name: 'Front Brake Pads', price: null },
       { id: 'front_brake_disc_pads', name: 'Front Brake Disc and Pads Replacement', price: 252 },
       { id: 'rear_brake_disc_pads', name: 'Rear Brake Disc and Pads Replacement', price: 228 },
@@ -43,7 +50,9 @@ const allCategories = [
     ]
   },
   {
-    id: 'steering', label: 'Steering', services: [
+    id: 'steering',
+    label: 'Steering',
+    services: [
       { id: 'front_2wheel_alignment', name: 'Front 2 wheel Alignment', price: 72 },
       { id: '4wheel_alignment_camber', name: '4 Wheel Alignment with Camber Caster', price: 144 },
       { id: '4wheel_alignment', name: '4 Wheel Alignment', price: 72 },
@@ -51,7 +60,9 @@ const allCategories = [
     ]
   },
   {
-    id: 'general_electrics', label: 'General electrics', services: [
+    id: 'general_electrics',
+    label: 'General electrics',
+    services: [
       { id: 'battery_replacement', name: 'Battery replacement (vehicles with stop/start system)', price: null },
       { id: 'alternator_replacement', name: 'Alternator replacement', price: null },
       { id: 'starter_motor_replacement', name: 'Starter motor replacement', price: 13.08 },
@@ -59,7 +70,9 @@ const allCategories = [
     ]
   },
   {
-    id: 'engine', label: 'Engine', services: [
+    id: 'engine',
+    label: 'Engine',
+    services: [
       { id: 'timing_belt_replacement', name: 'Timing belt replacement', price: null },
       { id: 'engine_diagnostics', name: 'Engine Diagnostics', price: 36 },
       { id: 'engine_rebuilds_birmingham', name: 'Engine Rebuilds Birmingham', price: null },
@@ -67,7 +80,9 @@ const allCategories = [
     ]
   },
   {
-    id: 'cooling', label: 'Cooling system', services: [
+    id: 'cooling',
+    label: 'Cooling system',
+    services: [
       { id: 'water_pump_replacement', name: 'Water pump replacement', price: 312 },
       { id: 'coolant_drain_refill', name: 'Coolant Drain & Refill', price: 86.40 },
       { id: 'anti_freeze_drain_refill', name: 'Anti Freeze drain & refill', price: 43.20 },
@@ -75,20 +90,26 @@ const allCategories = [
     ]
   },
   {
-    id: 'suspension', label: 'Suspension', services: [
+    id: 'suspension',
+    label: 'Suspension',
+    services: [
       { id: 'rear_coil_spring', name: 'Rear Coil spring (road spring) replacement', price: 240 },
       { id: 'front_coil_spring', name: 'Front Coil spring (road spring) replacement', price: null }
     ]
   },
   {
-    id: 'tyres', label: 'Tyres', services: [
+    id: 'tyres',
+    label: 'Tyres',
+    services: [
       { id: 'puncture_repair', name: 'Puncture Repair', price: 24 },
       { id: 'wheel_balancing', name: 'Wheel Balancing', price: 12 },
       { id: 'locking_wheel_nut_removal', name: 'One Locking Wheel Nut Removal', price: 21.6 }
     ]
   },
   {
-    id: 'heating_air', label: 'Heating & air conditioning', services: [
+    id: 'heating_air',
+    label: 'Heating & air conditioning',
+    services: [
       { id: 'air_con_regas_2017on', name: 'Air Con Re-gas (2017 onwards)', price: 100 },
       { id: 'air_con_regas_before2017', name: 'Air Con Re-gas (Before 2017)', price: 50 },
       { id: 'car_air_conditioning_birmingham', name: 'Car Air Conditioning Birmingham', price: 54 },
@@ -97,17 +118,23 @@ const allCategories = [
     ]
   },
   {
-    id: 'em_fuel', label: 'Engine management - Fuel', services: [
+    id: 'em_fuel',
+    label: 'Engine management - Fuel',
+    services: [
       { id: 'add_blue_refill', name: 'Add Blue Re-fill', price: 30 }
     ]
   },
   {
-    id: 'clutch_controls', label: 'Clutch & controls', services: [
+    id: 'clutch_controls',
+    label: 'Clutch & controls',
+    services: [
       { id: 'clutch_repair_birmingham', name: 'Clutch Repair Birmingham', price: 96 }
     ]
   },
   {
-    id: 'other', label: 'Other', services: [
+    id: 'other',
+    label: 'Other',
+    services: [
       { id: 'anti_freeze', name: 'Anti Freeze', price: 24 },
       { id: 'dpf_cleaning_birmingham', name: 'DPF Cleaning Birmingham', price: 240 },
       { id: 'tyre_pressure_check_birmingham', name: 'Tyre Pressure Check Birmingham', price: 6 },
@@ -143,40 +170,37 @@ const allCategories = [
   },
   { id: 'all_repair', label: 'All Repair', services: [] }
 ];
-
-
-
 const vehicleMockData = {
   reg: 'HA11AA',
   make: 'TOYOTA',
   fuel: 'PETROL'
 };
 
-const Home = () => {
+<img src={MOTImage} alt="MOT Banner" className="w-full h-full object-cover" />
+
+
+const MOT = () => {
   const [currentImg, setCurrentImg] = useState(0);
   const [activeTab, setActiveTab] = useState('services');
   const [regNo, setRegNo] = useState('');
   const [selectedService, setSelectedService] = useState('');
   const [tyreSize, setTyreSize] = useState({ width: '205', profile: '55', rim: '16' });
   const [tyreType, setTyreType] = useState('fully-fitted');
-  const images = [why, why2, why3];
-
   const [showServicePopup, setShowServicePopup] = useState(false);
   const [serviceReg, setServiceReg] = useState('');
   const [vehicleInfo, setVehicleInfo] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(allCategories[0].id);
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
-
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImg((prev) => (prev + 1) % images.length);
+      setCurrentImg((prev) => (prev + 1) % 3);
     }, 3000);
     return () => clearInterval(interval);
-  }, [images.length]);
-
+  }, []);
+  
   useEffect(() => {
     if (!cartOpen) return;
     const handler = (e) => {
@@ -185,12 +209,12 @@ const Home = () => {
     window.addEventListener('mousedown', handler);
     return () => window.removeEventListener('mousedown', handler);
   }, [cartOpen]);
-
+  
   useEffect(() => {
     if (showServicePopup) document.body.style.overflow = 'hidden';
     else document.body.style.overflow = '';
   }, [showServicePopup]);
-
+  
   function addToCart(service) {
     setCart((prev) => {
       const idx = prev.findIndex((item) => item.id === service.id);
@@ -201,24 +225,30 @@ const Home = () => {
     });
     setCartOpen(true);
   }
+  
   function removeFromCart(id) {
     setCart((prev) => prev.filter((item) => item.id !== id));
   }
+  
   function changeQty(id, delta) {
     setCart((prev) => prev.map((item) =>
       item.id === id ? { ...item, qty: Math.max(1, item.qty + delta) } : item
     ));
   }
+  
   function handleServiceSelect(service, checked) {
     if (checked) addToCart(service);
     else removeFromCart(service.id);
   }
+  
   function isInCart(serviceId) {
     return !!cart.find((item) => item.id === serviceId);
   }
+  
   function handleProceedBooking() {
     navigate('/booking');
   }
+  
   function handleOpenServicePopup() {
     if (!regNo.trim()) return;
     setServiceReg(regNo.trim().toUpperCase());
@@ -226,7 +256,7 @@ const Home = () => {
     setShowServicePopup(true);
     setSelectedCategory(allCategories[0].id);
   }
-
+  
   const BookingSystem = () => (
     <div
       className="mt-8 p-4 rounded-xl w-full max-w-sm mx-auto"
@@ -266,12 +296,8 @@ const Home = () => {
         <div className="flex">
           <button
             type="button"
-            onClick={() => setActiveTab('book-mot')}
-            className={`w-full px-3 py-2 text-sm font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
-              activeTab === 'book-mot'
-                ? 'bg-white text-black'
-                : 'border border-white text-white hover:bg-white hover:text-black'
-            }`}
+            onClick={() => navigate('/mot')}
+            className="w-full bg-[var(--primary-blue)] text-white py-3 rounded-lg font-bold hover:bg-[var(--primary-blue-dark)] transition-colors flex items-center justify-center gap-2"
             style={{ borderRadius: 'var(--radius-md)' }}
           >
             <Shield className="w-4 h-4" />
@@ -328,46 +354,9 @@ const Home = () => {
           </div>
         </div>
       )}
-      {activeTab === 'book-mot' && (
-        <div className="space-y-4">
-          <div className="flex">
-            <div className="flex items-center px-2 bg-[var(--primary-blue)] rounded-l-lg">
-              <div className="w-6 h-4 bg-[var(--primary-blue-dark)] rounded-sm flex items-center justify-center">
-                <span className="text-white text-xs font-bold">GB</span>
-              </div>
-            </div>
-            <input
-              type="text"
-              value={regNo}
-              onChange={e => setRegNo(e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase())}
-              placeholder="ENTER REG NO."
-              className="flex-1 px-3 py-3 bg-[var(--primary-blue-lighter)] text-black font-bold placeholder-gray-700 rounded-r-lg focus:outline-none text-sm"
-              maxLength={10}
-              spellCheck={false}
-              autoComplete="off"
-            />
-          </div>
-          <p className="text-white text-center text-sm">Don't know your vehicle registration?</p>
-          <button
-            type="button"
-            onClick={() => {}}
-            className="w-full bg-[var(--primary-blue)] text-white py-3 rounded-lg font-bold hover:bg-[var(--primary-blue-dark)] transition-colors flex items-center justify-center gap-2"
-          >
-            <Search className="w-4 h-4" />
-            Search
-          </button>
-          <Link
-            to="/mot-check"
-            className="w-full bg-[var(--primary-blue-dark)] text-white py-3 rounded-lg font-bold hover:bg-[var(--primary-blue)] transition-colors flex items-center justify-center gap-2"
-          >
-            <Shield className="w-5 h-5" />
-            IS YOUR MOT DUE?
-          </Link>
-        </div>
-      )}
     </div>
   );
-
+  
   const CartDropdown = () => {
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
     return (
@@ -435,7 +424,7 @@ const Home = () => {
       </div>
     );
   };
-
+  
   const ServicePopup = () => (
     <div className="fixed inset-0 z-[999] flex items-center justify-center"
       style={{
@@ -508,11 +497,11 @@ const Home = () => {
                       <span className="font-bold text-lg">{service.name}</span>
                     </div>
                     <div className="flex items-center gap-4">
-<span className="font-bold text-lg text-green-700">
-    {typeof service.price === "number"
-      ? `£${service.price.toFixed(2)}`
-      : "Price on Request"}
-  </span>                      <input
+                      <span className="font-bold text-lg text-green-700">
+                        {typeof service.price === "number"
+                          ? `£${service.price.toFixed(2)}`
+                          : "Price on Request"}
+                      </span>                      <input
                         type="checkbox"
                         className="w-5 h-5 accent-green-600"
                         checked={isInCart(service.id)}
@@ -535,208 +524,76 @@ const Home = () => {
       </div>
     </div>
   );
-
-  const servicesArr = [
-    { icon: <Shield className="w-12 h-12" />, title: "MOT Testing", description: "Official MOT testing for Class 4, 5 & 7 vehicles", image: MOT },
-    { icon: <Wrench className="w-12 h-12" />, title: "Vehicle Repairs", description: "Repairs for all makes and models", image: vehicleRepairs },
-    { icon: <Settings className="w-12 h-12" />, title: "Regular Servicing", description: "Routine maintenance for long-lasting performance", image: regularServices },
-    { icon: <Car className="w-12 h-12" />, title: "Brake Services", description: "Brake inspection and replacement", image: brake },
-    { icon: <Battery className="w-12 h-12" />, title: "Battery Services", description: "Battery testing and replacement", image: batteryImg },
-    { icon: <Zap className="w-12 h-12" />, title: "Clutch Repairs", description: "Clutch repair and replacement", image: clutch }
-  ];
-  const features = [
-    { icon: <Award className="w-8 h-8" />, title: "MOT Approved", description: "Official MOT testing station" },
-    { icon: <Users className="w-8 h-8" />, title: "Expert Technicians", description: "Qualified and experienced staff" },
-    { icon: <Clock className="w-8 h-8" />, title: "Quick Service", description: "Fast turnaround times" },
-    { icon: <CheckCircle className="w-8 h-8" />, title: "Quality Guaranteed", description: "All work comes with warranty" }
-  ];
-
+  
   return (
-    <div className="min-h-screen relative" style={{ background: 'var(--bg-gradient-main)' }}>
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Banner */}
+      <div className="relative w-full h-64 md:h-96 mb-8">
+        <img
+          src={MOTImage}
+          alt="MOT Banner"
+          className="w-full h-full object-cover"
+        />
+      </div>
+      
+      {/* Left Box with Description */}
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Left Box */}
+          <div className="w-full md:w-1/3 bg-white p-6 rounded-xl shadow-lg">
+            <h2 className="text-2xl font-bold mb-4 text-[var(--primary-blue)]">Why Choose Our MOT Service?</h2>
+            <ul className="space-y-3">
+              <li className="flex items-start gap-2">
+                <ChevronRight size={18} className="text-green-600 mt-1" />
+                <span>Quick and efficient MOT testing</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <ChevronRight size={18} className="text-green-600 mt-1" />
+                <span>Fully certified testing center</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <ChevronRight size={18} className="text-green-600 mt-1" />
+                <span>Same-day testing available</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <ChevronRight size={18} className="text-green-600 mt-1" />
+                <span>Free re-test if failed</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <ChevronRight size={18} className="text-green-600 mt-1" />
+                <span>Convenient online booking</span>
+              </li>
+            </ul>
+            <div className="mt-6">
+              <button
+                type="button"
+                className="w-full bg-[var(--primary-blue)] text-white py-3 rounded-lg font-bold hover:bg-[var(--primary-blue-dark)] transition-colors"
+                onClick={() => navigate('/booking')}
+              >
+                BOOK NOW
+              </button>
+            </div>
+          </div>
+          
+          {/* Right Side - Booking System */}
+          <div className="w-full md:w-2/3">
+            <BookingSystem />
+          </div>
+        </div>
+      </div>
+      
+      {/* CTA Button */}
+      <div className="text-center mt-8">
+       
+      </div>
+      
+      {/* Cart Dropdown */}
       <CartDropdown />
+      
+      {/* Service Popup */}
       {showServicePopup && <ServicePopup />}
-      <section className="relative pt-12 pb-24 px-4 md:px-20">
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full opacity-20"
-            style={{ background: 'var(--primary-blue-light)', filter: 'blur(80px)' }}></div>
-          <div className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full opacity-20"
-            style={{ background: 'var(--primary-blue-dark)', filter: 'blur(60px)' }}></div>
-        </div>
-        <div className="relative z-10 max-w-6xl mx-auto">
-          <div className="glass-effect rounded-2xl shadow-lg"
-            style={{ boxShadow: 'var(--shadow-lg)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--card-border)' }}>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="p-8 md:p-12 flex flex-col justify-center">
-                <span className="inline-block px-4 py-1 mb-4 rounded-full text-sm font-medium"
-                  style={{ background: 'var(--primary-blue-light)', color: 'white' }}>
-                  Trusted Since 2010
-                </span>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style={{ color: 'var(--text-dark)' }}>
-                  Expert Auto <span className="gradient-text">Services</span> You Can Trust
-                </h1>
-                <p className="text-lg mb-8" style={{ color: 'var(--text-muted)' }}>
-                  From MOT testing to comprehensive repairs, we keep your vehicle running at its best with professional care.
-                </p>
-                <BookingSystem />
-                <div className="mt-10 flex flex-wrap gap-6">
-                  <div className="flex items-center gap-2">
-                    <MapPin size={16} style={{ color: 'var(--primary-blue)' }}/>
-                    <span style={{ color: 'var(--text-muted)' }}>Birmingham, UK</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Phone size={16} style={{ color: 'var(--primary-blue)' }}/>
-                    <span style={{ color: 'var(--text-muted)' }}>07123 456789</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock size={16} style={{ color: 'var(--primary-blue)' }}/>
-                    <span style={{ color: 'var(--text-muted)' }}>Mon-Sat: 8AM-6PM</span>
-                  </div>
-                </div>
-              </div>
-              <div className="relative hidden md:block">
-                <div className="absolute inset-0 z-0"
-                  style={{
-                    backgroundImage: `url(${hero})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    borderRadius: '0 var(--radius-xl) var(--radius-xl) 0',
-                    filter: 'brightness(0.9)'
-                  }}>
-                </div>
-                <div className="absolute inset-0"
-                  style={{
-                    background: 'linear-gradient(90deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 100%)',
-                    borderRadius: '0 var(--radius-xl) var(--radius-xl) 0'
-                  }}>
-                </div>
-                <div className="absolute bottom-8 right-8 p-6 glass-effect rounded-xl max-w-xs"
-                  style={{
-                    boxShadow: 'var(--shadow-md)',
-                    borderRadius: 'var(--radius-md)',
-                    border: '1px solid var(--card-border)'
-                  }}>
-                  <div className="text-3xl font-bold mb-2" style={{ color: 'var(--primary-blue)' }}>4.9</div>
-                  <div className="flex gap-1 mb-2">
-                    {[1,2,3,4,5].map(star => (
-                      <svg key={star} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4" style={{ color: '#fbbf24' }}>
-                        <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
-                      </svg>
-                    ))}
-                  </div>
-                  <div style={{ color: 'var(--text-muted)' }}>Based on 200+ customer reviews</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* SERVICES SECTION */}
-      <section style={{ padding: 'var(--spacing-2xl) 0' }}>
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4" style={{ color: 'var(--text-light)' }}>Our Services</h2>
-            <p className="text-xl max-w-3xl mx-auto" style={{ color: 'var(--primary-blue-lighter)' }}>
-              We offer comprehensive automotive services with professional expertise and quality assurance.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {servicesArr.map((service, index) => (
-              <div key={index} className="hover-scale glass-effect rounded-xl overflow-hidden"
-                   style={{
-                     boxShadow: 'var(--shadow-md)',
-                     borderRadius: 'var(--radius-lg)',
-                     border: '1px solid var(--card-border)'
-                   }}>
-                <div className="relative">
-                  <img src={service.image} alt={service.title} className="w-full h-48 object-cover" />
-                  <div className="absolute inset-0" style={{
-                    background: 'linear-gradient(to top, rgba(30, 64, 175, 0.4), transparent)'
-                  }}></div>
-                </div>
-                <div className="p-8">
-                  <div style={{ color: 'var(--primary-blue)' }} className="mb-4">{service.icon}</div>
-                  <h3 className="text-xl font-semibold mb-3" style={{ color: 'var(--text-dark)' }}>{service.title}</h3>
-                  <p className="mb-6" style={{ color: 'var(--text-muted)' }}>{service.description}</p>
-                  <Link to="/booking" className="inline-block px-6 py-3 rounded-lg text-white"
-                        style={{
-                          background: 'var(--bg-gradient-card)',
-                          borderRadius: 'var(--radius-md)',
-                          boxShadow: 'var(--shadow-sm)',
-                          transition: 'var(--transition-normal)'
-                        }}>
-                    Book Now
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      {/* WHY CHOOSE US SECTION */}
-      <section style={{
-        padding: 'var(--spacing-2xl) 0',
-        background: 'var(--bg-gradient-secondary)'
-      }}>
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4" style={{ color: 'var(--text-dark)' }}>Why Choose Access Auto Services?</h2>
-            <p className="text-lg max-w-2xl mx-auto" style={{ color: 'var(--text-muted)' }}>
-              We are an MOT approved garage committed to reliable auto care and customer satisfaction.
-            </p>
-          </div>
-
-          <div className="flex flex-col md:flex-row items-center gap-10">
-            <div className="md:w-1/2">
-              <div className="relative rounded-xl overflow-hidden" style={{ boxShadow: 'var(--shadow-lg)' }}>
-                <img
-                  src={images[currentImg]}
-                  alt="Why choose us"
-                  className="w-full"
-                  style={{ borderRadius: 'var(--radius-lg)' }}
-                />
-                <div className="absolute inset-0" style={{
-                  background: 'linear-gradient(to top right, rgba(30, 64, 175, 0.3), transparent)'
-                }}></div>
-              </div>
-            </div>
-            <div className="md:w-1/2 space-y-6">
-              {features.map((feature, index) => (
-                <div key={index} className="flex items-start space-x-4 p-6 hover-scale glass-effect"
-                     style={{
-                       borderRadius: 'var(--radius-md)',
-                       boxShadow: 'var(--shadow-sm)',
-                       border: '1px solid var(--card-border)'
-                     }}>
-                  <div style={{
-                    color: 'var(--primary-blue)',
-                    background: 'rgba(219, 234, 254, 0.5)',
-                    padding: 'var(--spacing-sm)',
-                    borderRadius: 'var(--radius-sm)'
-                  }}>{feature.icon}</div>
-                  <div>
-                    <h4 className="font-semibold text-lg" style={{ color: 'var(--text-dark)' }}>{feature.title}</h4>
-                    <p style={{ color: 'var(--text-muted)' }}>{feature.description}</p>
-                  </div>
-                </div>
-              ))}
-              <div className="text-center mt-10">
-                <Link to="/about" className="inline-block px-10 py-4 rounded-xl hover-scale font-semibold"
-                      style={{
-                        background: 'var(--bg-gradient-card)',
-                        color: 'white',
-                        borderRadius: 'var(--radius-md)',
-                        boxShadow: 'var(--shadow-md)',
-                        transition: 'var(--transition-normal)'
-                      }}>
-                  Learn More About Us
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
 
-export default Home;
+export default MOT;
