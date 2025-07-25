@@ -1,11 +1,11 @@
-
 import React, { useState } from 'react';
-import { Calendar, Clock, Car, User, CreditCard, CheckCircle, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, Car, User, CreditCard, CheckCircle } from 'lucide-react';
 
 const Booking = () => {
   const [step, setStep] = useState(1);
   const [bookingData, setBookingData] = useState({
     service: '',
+    motClass: '', // <-- add motClass to bookingData
     date: '',
     time: '',
     vehicle: {
@@ -33,14 +33,14 @@ const Booking = () => {
 
   // Services data with pricing details
   const services = [
-    { id: 'mot', name: 'MOT Test', price: 54.85, duration: '1 hour', description: 'Official MOT testing for Class 4, 5 & 7 vehicles' },
-    { id: 'service', name: 'Full Service', price: 89.00, duration: '2 hours', description: 'Complete vehicle health check and maintenance' },
-    { id: 'repair', name: 'Vehicle Repair', price: 0, duration: 'TBD', description: 'Custom repair based on your vehicle needs' },
-    { id: 'brakes', name: 'Brake Service', price: 120.00, duration: '1.5 hours', description: 'Brake inspection and replacement' },
-    { id: 'battery', name: 'Battery Service', price: 80.00, duration: '30 minutes', description: 'Battery testing and replacement' },
-    { id: 'clutch', name: 'Clutch Repair', price: 450.00, duration: '4 hours', description: 'Clutch repair and replacement' },
-    { id: 'exhaust', name: 'Exhaust Service', price: 150.00, duration: '1 hour', description: 'Exhaust system inspection and repair' },
-    { id: 'diagnostics', name: 'Vehicle Diagnostics', price: 45.00, duration: '45 minutes', description: 'Comprehensive diagnostic scan' }
+    { id: 'mot', name: 'MOT Test', price: 54.85, description: 'Official MOT testing for Class 4, 5 & 7 vehicles' },
+    { id: 'service', name: 'Full Service', price: 89.00,  description: 'Complete vehicle health check and maintenance' },
+    { id: 'repair', name: 'Vehicle Repair', price: 0,  description: 'Custom repair based on your vehicle needs' },
+    { id: 'brakes', name: 'Brake Service', price: 120.00,  description: 'Brake inspection and replacement' },
+    { id: 'battery', name: 'Battery Service', price: 80.00,  description: 'Battery testing and replacement' },
+    { id: 'clutch', name: 'Clutch Repair', price: 450.00,  description: 'Clutch repair and replacement' },
+    { id: 'exhaust', name: 'Exhaust Service', price: 150.00,  description: 'Exhaust system inspection and repair' },
+    { id: 'diagnostics', name: 'Vehicle Diagnostics', price: 45.00, description: 'Comprehensive diagnostic scan' }
   ];
 
   // Time slots array
@@ -67,32 +67,27 @@ const Booking = () => {
       { name: 'address', label: 'Address', type: 'textarea', rows: 3, colSpan: 2 }
     ]
   };
-  
+
   const paymentFields = [
     { name: 'cardNumber', label: 'Card Number *', type: 'text', placeholder: '1234 5678 9012 3456', colSpan: 2 },
     { name: 'expiryDate', label: 'Expiry Date *', type: 'text', placeholder: 'MM/YY', colSpan: 1 },
     { name: 'cvv', label: 'CVV *', type: 'text', placeholder: '123', colSpan: 1 },
     { name: 'nameOnCard', label: 'Name on Card *', type: 'text', placeholder: 'John Smith', colSpan: 2 }
   ];
-  
+
   const paymentMethods = [
     { id: 'card', label: 'Credit/Debit Card', icon: <CreditCard className="w-6 h-6 mr-3" /> },
     { id: 'cash', label: 'Pay at Garage', icon: <span className="w-6 h-6 mr-3 text-2xl">💷</span> }
   ];
 
-  // Define missing variables
-  const SERVICE_PRICES = {
-    'Class 4': 54.85,
-    'Class 5': 54.85,
-    'Class 7': 54.85
-  };
-
+  // MOT class options
   const classOptions = [
     { label: 'Class 4', price: 54.85 },
     { label: 'Class 5', price: 54.85 },
     { label: 'Class 7', price: 54.85 }
   ];
 
+  // Handlers
   const handleInputChange = (section, field, value) => {
     if (section) {
       setBookingData(prev => {
@@ -133,31 +128,29 @@ const Booking = () => {
   const isStepValid = () => {
     switch (step) {
       case 1:
-        return !!bookingData.service;
+        return !!bookingData.service && (bookingData.service !== 'mot' || !!bookingData.motClass);
       case 2:
         return !!bookingData.date && !!bookingData.time;
       case 3:
-        return !!bookingData.vehicle.make && !!bookingData.vehicle.model && 
-               !!bookingData.vehicle.registration && !!bookingData.customer.firstName && 
-               !!bookingData.customer.email && !!bookingData.customer.phone;
+        return !!bookingData.vehicle.make && !!bookingData.vehicle.model &&
+          !!bookingData.vehicle.registration && !!bookingData.customer.firstName &&
+          !!bookingData.customer.email && !!bookingData.customer.phone;
       case 4:
-        return bookingData.payment.method === 'cash' || 
-              (!!bookingData.payment.cardNumber && !!bookingData.payment.expiryDate && 
-               !!bookingData.payment.cvv && !!bookingData.payment.nameOnCard);
+        return bookingData.payment.method === 'cash' ||
+          (!!bookingData.payment.cardNumber && !!bookingData.payment.expiryDate &&
+            !!bookingData.payment.cvv && !!bookingData.payment.nameOnCard);
       default:
         return true;
     }
   };
 
   const selectedService = services.find(s => s.id === bookingData.service);
-  const resetMotSelection = () => {
-    setBookingData(prev => ({
-      ...prev,
-      service: '',
-      motClass: ''
-    }));
-  };
-  
+  const motClassOption = classOptions.find(opt => opt.label === bookingData.motClass);
+  const motPrice = motClassOption ? motClassOption.price : selectedService?.price;
+  const summaryPrice = selectedService?.id === 'mot'
+    ? (motClassOption ? motClassOption.price : 0)
+    : (selectedService?.price ?? 0);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -194,9 +187,9 @@ const Booking = () => {
             <p className="text-gray-600">
               Step {step} of 4: {
                 step === 1 ? 'Select Service' :
-                step === 2 ? 'Choose Date & Time' :
-                step === 3 ? 'Vehicle & Contact Details' :
-                'Payment Information'
+                  step === 2 ? 'Choose Date & Time' :
+                    step === 3 ? 'Vehicle & Contact Details' :
+                      'Payment Information'
               }
             </p>
           </div>
@@ -213,37 +206,66 @@ const Booking = () => {
                   Select Your Service
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {services.map((service) => (
+                  {services.map(service => (
                     <div
                       key={service.id}
-                      onClick={() => {
-                        handleInputChange(null, 'service', service.id);
-                        resetMotSelection();
-                      }}
                       className={`p-6 rounded-lg border-2 cursor-pointer transition-all duration-300 hover:shadow-lg ${
                         bookingData.service === service.id
                           ? 'border-blue-600 bg-blue-50'
                           : 'border-gray-200 hover:border-blue-300'
                       }`}
+                      onClick={() => {
+                        setBookingData(prev => ({
+                          ...prev,
+                          service: service.id,
+                          motClass: service.id === 'mot' ? prev.motClass : ''
+                        }));
+                      }}
                     >
                       <h3 className="text-xl font-semibold text-gray-800 mb-2">{service.name}</h3>
                       <p className="text-sm mb-3">{service.description}</p>
                       <div className="flex justify-between items-center text-sm">
-                        <span className="flex items-center">
-                          <Clock className="w-4 h-4 mr-1" />
-                          {service.duration}
-                        </span>
+                        
                         <span className="font-semibold text-blue-600">
                           {service.price > 0 ? `£${service.price.toFixed(2)}` : 'Quote on request'}
                         </span>
                       </div>
+                      {/* MOT Class Dropdown */}
+                      {service.id === 'mot' && bookingData.service === 'mot' && (
+                        <div className="mt-6">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Select MOT Class
+                          </label>
+                          <select
+                            value={bookingData.motClass}
+                            onClick={e => e.stopPropagation()}
+                            onChange={e =>
+                              setBookingData(prev => ({
+                                ...prev,
+                                motClass: e.target.value
+                              }))
+                            }
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white"
+                          >
+                            <option value="">Select Class</option>
+                            {classOptions.map(opt => (
+                              <option key={opt.label} value={opt.label}>
+                                {opt.label} ({`£${opt.price.toFixed(2)}`})
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
                 <div className="mt-8 flex justify-end">
                   <button
                     onClick={nextStep}
-                    disabled={!bookingData.service}
+                    disabled={
+                      !bookingData.service ||
+                      (bookingData.service === 'mot' && !bookingData.motClass)
+                    }
                     className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-300"
                   >
                     Continue
@@ -296,7 +318,14 @@ const Booking = () => {
                     <h3 className="font-semibold text-gray-800 mb-2">Selected Service:</h3>
                     <p className="text-gray-600">{selectedService.name}</p>
                     <p className="text-blue-600 font-semibold">
-                      {selectedService.price > 0 ? `£${selectedService.price}` : 'Quote on request'}
+                      {selectedService.id === 'mot'
+                        ? bookingData.motClass
+                          ? `£${motPrice}`
+                          : 'Select MOT Class'
+                        : selectedService.price > 0
+                          ? `£${selectedService.price}`
+                          : 'Quote on request'
+                      }
                     </p>
                   </div>
                 )}
@@ -344,7 +373,6 @@ const Booking = () => {
                       ))}
                     </div>
                   </div>
-                  
                   {/* Customer Information */}
                   <div>
                     <h3 className="text-xl font-semibold text-gray-800 mb-4">Contact Information</h3>
@@ -388,7 +416,6 @@ const Booking = () => {
                   <CreditCard className="w-8 h-8 mr-3 text-blue-600" />
                   Payment Information
                 </h2>
-                
                 {/* Booking Summary */}
                 <div className="bg-gray-50 rounded-lg p-6 mb-8">
                   <h3 className="text-xl font-semibold text-gray-800 mb-4">Booking Summary</h3>
@@ -409,17 +436,24 @@ const Booking = () => {
                       <span>Vehicle:</span>
                       <span className="font-semibold">{bookingData.vehicle.make} {bookingData.vehicle.model}</span>
                     </div>
+                    {selectedService?.id === 'mot' && bookingData.motClass && (
+                      <div className="flex justify-between">
+                        <span>MOT Class:</span>
+                        <span className="font-semibold">{bookingData.motClass}</span>
+                      </div>
+                    )}
                     <div className="border-t pt-2 mt-4">
                       <div className="flex justify-between text-lg font-bold">
                         <span>Total:</span>
                         <span className="text-blue-600">
-                          {selectedService?.price > 0 ? `£${selectedService.price}` : 'Quote on request'}
+                          {(selectedService?.id === 'mot')
+                            ? (bookingData.motClass ? `£${motPrice}` : 'Select MOT Class')
+                            : (selectedService?.price > 0 ? `£${selectedService.price}` : 'Quote on request')}
                         </span>
                       </div>
                     </div>
                   </div>
                 </div>
-                
                 {/* Payment Method */}
                 <div className="space-y-6">
                   <div>
@@ -550,6 +584,12 @@ const Booking = () => {
                       <span>Vehicle:</span>
                       <span className="font-semibold">{bookingData.vehicle.registration}</span>
                     </div>
+                    {selectedService?.id === 'mot' && bookingData.motClass && (
+                      <div className="flex justify-between">
+                        <span>MOT Class:</span>
+                        <span className="font-semibold">{bookingData.motClass}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
